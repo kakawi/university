@@ -10,6 +10,4 @@ build
 # Dependency directories
 node_modules
 
-
-
-
+/database/*.bak
