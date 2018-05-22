@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" id="Project_30eddd1" template="Default" database="PostgreSQL" >
+	<schema name="public" catalogname="university" schemaname="public" >
+		<sequence name="hibernate_sequence" start="1" />
+		<sequence name="s_student_mark" start="1" />
+	</schema>
+	<schema name="university" catalogname="postgres" schemaname="university" >
+		<table name="department" >
+			<column name="id" type="bigserial" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="faculty_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="kafedra_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="kafedra_name_uindex" unique="UNIQUE" >
+				<column name="name" />
+			</index>
+			<fk name="kafedra_fakultet_id_fk" to_schema="university" to_table="faculty" >
+				<fk_column name="faculty_id" pk="id" />
+			</fk>
+		</table>
+		<table name="faculty" >
+			<column name="id" type="bigserial" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<index name="fakultet_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="fakultet_name_uindex" unique="UNIQUE" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="group" >
+			<column name="id" type="bigserial" length="19" decimal="0" jt="-5" mandatory="y" sequence="group_id_seq" />
+			<column name="group_number" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="set_id" type="bigint" jt="-5" />
+			<index name="group_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_group_set_id" unique="NORMAL" >
+				<column name="set_id" />
+			</index>
+			<fk name="fk_group_set" to_schema="university" to_table="set" >
+				<fk_column name="set_id" pk="id" />
+			</fk>
+		</table>
+		<table name="schedule" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="subject_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="set_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="session_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<index name="current_session_pkey1" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_current_session_subject_session" to_schema="university" to_table="session" >
+				<fk_column name="session_id" pk="id" />
+			</fk>
+			<fk name="fk_current_session_subject_set" to_schema="university" to_table="set" >
+				<fk_column name="set_id" pk="id" />
+			</fk>
+			<fk name="current_session_subject_id_fk" to_schema="university" to_table="subject" >
+				<fk_column name="subject_id" pk="id" />
+			</fk>
+		</table>
+		<table name="session" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="year_of_session" type="integer" jt="4" mandatory="y" />
+			<column name="is_finished" type="bool" jt="-7" mandatory="y" >
+				<defo>false</defo>
+			</column>
+			<index name="pk_session_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="set" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="speciality_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="year_of_establishment" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<index name="unq_speciality_year_specialiry_id" unique="UNIQUE" >
+				<column name="speciality_id" />
+				<column name="year_of_establishment" />
+			</index>
+			<index name="idx_speciality_year_year_of_establishment_id" unique="NORMAL" >
+				<column name="year_of_establishment" />
+			</index>
+			<index name="pk_speciality_year_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_speciality_year_speciality" to_schema="university" to_table="speciality" >
+				<fk_column name="speciality_id" pk="id" />
+			</fk>
+		</table>
+		<table name="speciality" >
+			<column name="id" type="bigserial" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="department_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="speciality_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="speciality_name_uindex" unique="UNIQUE" >
+				<column name="name" />
+			</index>
+			<fk name="speciality_kafedra_id_fk" to_schema="university" to_table="department" >
+				<fk_column name="department_id" pk="id" />
+			</fk>
+		</table>
+		<table name="student" >
+			<column name="id" type="bigserial" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="last_name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="first_name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="middle_name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="record_book" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="address_of_permanent_residence" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="address_of_residence" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="is_get_scholarship" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="group_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="premium" type="integer" length="10" decimal="0" jt="4" />
+			<column name="is_local" type="bool" jt="-7" mandatory="y" />
+			<index name="student_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="student_groups_id_fk" to_schema="university" to_table="group" >
+				<fk_column name="group_id" pk="id" />
+			</fk>
+		</table>
+		<table name="student_history" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="student_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="date" type="timestamp" length="29" decimal="6" jt="93" mandatory="y" />
+			<column name="action" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="group_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<index name="student_history_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="student_history_groups_id_fk" to_schema="university" to_table="group" >
+				<fk_column name="group_id" pk="id" />
+			</fk>
+			<fk name="student_history_student_id_fk" to_schema="university" to_table="student" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+		</table>
+		<table name="student_mark" >
+			<column name="id" type="bigint" jt="-5" mandatory="y" />
+			<column name="student_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="schedule_id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="mark" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_student_mark_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_student_mark_schedule_id" unique="NORMAL" >
+				<column name="schedule_id" />
+			</index>
+			<fk name="student_mark_student_id_fk" to_schema="university" to_table="student" >
+				<fk_column name="student_id" pk="id" />
+			</fk>
+			<fk name="student_mark_current_session_id_fk" to_schema="university" to_table="schedule" >
+				<fk_column name="schedule_id" pk="id" />
+			</fk>
+		</table>
+		<table name="subject" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" />
+			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<index name="subject_pkey" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<sequence name="fakultet_id_seq" start="1" />
+		<sequence name="group_id_seq" start="1" />
+		<sequence name="kafedra_id_seq" start="1" />
+		<sequence name="s_schedule" start="1" />
+		<sequence name="speciality_id_seq" start="1" />
+		<sequence name="student_id_seq" start="1" />
+		<procedure name="process_finish_session" id="Procedure_2274443" isSystem="false" params_known="y" >
+			<string><![CDATA[CREATE OR REPLACE FUNCTION university.process_finish_session()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+    BEGIN        
+        IF NEW.is_finished = TRUE THEN
+            -- Clear
+            UPDATE university.student SET is_get_scholarship = 0, premium = 0;
+            -- is get scholarship FOR local
+            UPDATE university.student st SET is_get_scholarship = 1
+            WHERE 
+              st.is_local = TRUE
+              and                
+              (
+                -- get all schedule for this student
+                SELECT count(*) FROM university.schedule sch
+                  JOIN university.set s ON sch.set_id = s.id
+                  JOIN university.group g ON g.set_id = s.id and st.group_id = g.id
+                  JOIN university.session ses ON ses.id = sch.session_id              
+                WHERE               
+                  ses.year_of_session = NEW.year_of_session
+              ) = (
+                SELECT count(*) FROM university.student_mark m4
+                  JOIN university.schedule sch2 ON sch2.id = m4.schedule_id and m4.student_id = st.id
+                  JOIN university.session ses2 ON ses2.id = sch2.session_id
+                WHERE 
+                  ses2.year_of_session = NEW.year_of_session
+                  and
+                  m4.mark > 3
+              );
+            -- is get scholarship FOR foreign
+            UPDATE university.student st SET is_get_scholarship = 1
+              WHERE 
+                st.is_local = FALSE
+                and                
+                (
+                  -- get all schedule for this student
+                  SELECT count(*) FROM university.schedule sch
+                    JOIN university.set s ON sch.set_id = s.id
+                    JOIN university.group g ON g.set_id = s.id and st.group_id = g.id
+                    JOIN university.session ses ON ses.id = sch.session_id              
+                  WHERE               
+                    ses.year_of_session = NEW.year_of_session
+                ) = (
+                  SELECT count(*) FROM university.student_mark m3
+                    JOIN university.schedule sch2 ON sch2.id = m3.schedule_id and m3.student_id = st.id
+                    JOIN university.session ses2 ON ses2.id = sch2.session_id
+                  WHERE 
+                    ses2.year_of_session = NEW.year_of_session
+                    and
+                    m3.mark > 3
+                )
+                and
+                1 >= (
+                  SELECT count(*) FROM university.student_mark as m5
+                    JOIN university.schedule sch2 ON sch2.id = m5.schedule_id and m5.student_id = st.id
+                    JOIN university.session ses2 ON ses2.id = sch2.session_id
+                  WHERE 
+                    ses2.year_of_session = NEW.year_of_session
+                    and
+                    m5.mark = 4
+                )
+                ;
+            -- add 50% Premium for whom get scholarhsip
+            UPDATE university.student st SET premium = 50
+            WHERE
+              st.is_get_scholarship = 1
+              and
+              -- Min mark is 6               
+              6 <= all (
+                SELECT m.mark FROM university.student_mark m
+                  JOIN university.schedule sch ON sch.id = m.schedule_id
+                  JOIN university.set s ON s.id = sch.set_id
+                  JOIN university.session ses ON ses.id = sch.session_id
+                  JOIN university.group g ON s.id = g.set_id and g.id = st.group_id  
+                  WHERE
+                    m.student_id = st.id
+                    and
+                    ses.year_of_session = NEW.year_of_session                                 
+              )
+              and
+              -- Max 2 mark six
+              2 >= (
+                SELECT count(*) FROM university.student_mark m
+                  JOIN university.schedule sch ON sch.id = m.schedule_id
+                  JOIN university.set s ON s.id = sch.set_id
+                  JOIN university.session ses ON ses.id = sch.session_id
+                  JOIN university.group g ON s.id = g.set_id and g.id = st.group_id  
+                  WHERE
+                    m.student_id = st.id
+                    and
+                    ses.year_of_session = NEW.year_of_session
+                    and
+                    m.mark = 6                                 
+              );
+            -- add 100% Premium for whom get scholarhsip
+            UPDATE university.student st SET premium = 100
+            WHERE
+              st.is_get_scholarship = 1
+              and 
+              9 <= all (
+                SELECT m.mark FROM university.student_mark m
+                  JOIN university.schedule sch ON sch.id = m.schedule_id
+                  JOIN university.set s ON s.id = sch.set_id
+                  JOIN university.session ses ON ses.id = sch.session_id
+                  JOIN university.group g ON s.id = g.set_id and g.id = st.group_id  
+                  WHERE
+                    m.student_id = st.id
+                    and
+                    ses.year_of_session = NEW.year_of_session                                 
+              );                      
+        END IF;        
+        RETURN NULL;
+    END;
+$function$
+]]></string>
+			<result_param name="returnValue" jt="1111" type="trigger" />
+			<result_param name="returnValue" jt="1111" type="trigger" />
+			<result_param name="returnValue" jt="1111" type="trigger" />
+		</procedure>
+		<trigger name="finish_session" table="session" id="Trigger_557f87d" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER finish_session AFTER UPDATE ON university.session FOR EACH ROW EXECUTE PROCEDURE university.process_finish_session()]]></string>
+		</trigger>
+	</schema>
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.1.4.jar" driver_desc="Standard" host="localhost" port="5432" instance="postgres" user="gleb" passwd="OTg1NTg5" />
+	<connector name="University" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.1.4.jar" driver_desc="Standard" host="localhost" port="5432" instance="university" user="university" passwd="MTIz" />
+	<layout name="Default Layout" id="Layout_28c5ba1" show_relation="no_text" >
+		<entity schema="university" name="student_history" color="33ff33" x="795" y="75" />
+		<entity schema="university" name="subject" color="1f5182" x="45" y="480" />
+		<entity schema="university" name="speciality" color="1f5182" x="90" y="300" />
+		<entity schema="university" name="set" color="1f5182" x="330" y="315" />
+		<entity schema="university" name="group" color="66ff66" x="570" y="300" />
+		<entity schema="university" name="faculty" color="1f5182" x="120" y="45" />
+		<entity schema="university" name="department" color="1f5182" x="105" y="165" />
+		<entity schema="university" name="session" color="1f5182" x="105" y="630" />
+		<entity schema="university" name="schedule" color="1f5182" x="360" y="480" />
+		<entity schema="university" name="student_mark" color="99ff99" x="900" y="495" />
+		<entity schema="university" name="student" color="66ff66" x="915" y="240" />
+		<script name="department" id="Editor_19effb9" language="SQL" confirmed="y" >
+			<string><![CDATA[INSERT INTO kursach.department
+	( id, name, faculty_id) VALUES ( 1, 'Электрические системы', 1 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 2, 'Тепловые электрические станции', 1 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 3, 'Электроснабжение', 1 );
+    
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 4, 'История и туризм', 2 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 5, 'Технологии и методики преподавания', 2 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 6, 'Физическая культура и спорт', 2 );          
+    
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 7, 'Вычислительные системы и сети', 3 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 8, 'Геодезия и геоинформационные системы', 3 );
+INSERT INTO kursach.department
+    ( id, name, faculty_id) VALUES ( 9, 'Технология программирования', 3 );         ]]></string>
+		</script>
+		<script name="faculty" id="Editor_432fb82" language="SQL" confirmed="y" >
+			<string><![CDATA[INSERT INTO kursach.faculty
+	( id, name) VALUES ( 1, 'Энергетический факультет' );
+INSERT INTO kursach.faculty
+    ( id, name) VALUES ( 2, 'Гуманитарный факультет' );
+INSERT INTO kursach.faculty
+    ( id, name) VALUES ( 3, 'Факультет информационных технологий' );]]></string>
+		</script>
+		<script name="queries" id="Editor_143784c" language="SQL" >
+			<string><![CDATA[-- # 1 - FINISHED
+-- Собираем таблицу из Student + все предметы, которые он должен был сдать
+-- Подзапросами оставляем только записи, где оценок нету или равны 1,2,3
+SELECT student.last_name, student.first_name, student.middle_name, subject.name FROM university.student
+  JOIN university.group g ON g.id = student.group_id
+  JOIN university.set ON set.id = g.set_id
+  JOIN university.schedule ON schedule.set_id = set.id
+  -- 
+  JOIN university.subject ON subject.id = schedule.subject_id
+  JOIN university.session ON session.id = schedule.session_id
+  -- Find department
+  JOIN university.speciality ON speciality.id = set.speciality_id
+  JOIN university.department ON department.id = speciality.department_id
+  WHERE
+  ( 
+    NOT EXISTS (
+      SELECT 1 FROM university.student_mark 
+      WHERE student_mark.student_id = student.id and student_mark.schedule_id = schedule.id
+    )
+    OR
+    4 > (
+      SELECT student_mark.mark FROM university.student_mark 
+      WHERE student_mark.student_id = student.id and student_mark.schedule_id = schedule.id
+    )
+  )
+and session.year_of_session = '2017'
+and department.name = 'Электрические системы';
+
+-- # 2 - FINISHED
+SELECT g.group_number, AVG(m.mark) FROM university.student st
+  JOIN university.group g ON g.id = st.group_id
+  JOIN university.student_mark m ON m.student_id = st.id
+  -- Find faculty
+  JOIN university.set ON set.id = g.set_id  
+  JOIN university.speciality sp ON sp.id = set.speciality_id
+  JOIN university.department d ON d.id =  sp.department_id
+  JOIN university.faculty f ON f.id = d.faculty_id
+  -- Session
+  JOIN university.schedule sch ON set.id = sch.set_id
+  JOIN university.session ses ON ses.id = sch.session_id
+WHERE f.name = 'Энергетический факультет' 
+and ses.year_of_session = '2017'
+GROUP BY g.group_number
+;
+
+-- # 3 -- FINISHED
+SELECT sub.name, AVG(m.marK) FROM university.student_mark m
+  JOIN university.schedule sch ON sch.id = m.schedule_id
+  JOIN university.subject sub ON sub.id = sch.subject_id
+  -- SESSION
+  JOIN university.session ses ON ses.id = sch.session_id
+  WHERE ses.year_of_session = 2017
+GROUP BY sub.name
+;
+
+-- # 4 -- FINISHED
+-- Local students
+SELECT st FROM university.student st 
+WHERE 
+  st.is_local = TRUE 
+  and                
+  (
+    -- get all schedule for this student
+    SELECT count(*) FROM university.schedule sch
+      JOIN university.set s ON sch.set_id = s.id
+      JOIN university.group g ON g.set_id = s.id and st.group_id = g.id
+      JOIN university.session ses ON ses.id = sch.session_id
+    WHERE 
+      ses.year_of_session = 2017
+  ) = (
+    SELECT count(*) FROM university.student_mark m4
+      JOIN university.schedule sch2 ON sch2.id = m4.schedule_id and m4.student_id = st.id
+      JOIN university.session ses2 ON ses2.id = sch2.session_id
+    WHERE 
+      ses2.year_of_session = 2017
+      and
+      m4.mark > 3
+  )
+union
+-- Foreign students
+SELECT st FROM university.student st 
+WHERE 
+  st.is_local = FALSE 
+  and 
+  (
+    -- get all schedule for this student
+    SELECT count(*) FROM university.schedule sch
+      JOIN university.set s ON sch.set_id = s.id
+      JOIN university.group g ON g.set_id = s.id and st.group_id = g.id
+      JOIN university.session ses ON ses.id = sch.session_id              
+    WHERE               
+      ses.year_of_session = 2017
+  ) = (
+    SELECT count(*) FROM university.student_mark m3
+      JOIN university.schedule sch2 ON sch2.id = m3.schedule_id and m3.student_id = st.id
+      JOIN university.session ses2 ON ses2.id = sch2.session_id
+    WHERE 
+      ses2.year_of_session = 2017
+      and
+      m3.mark > 3
+  )
+  and
+  1 >= (
+    SELECT count(*) FROM university.student_mark as m5
+      JOIN university.schedule sch2 ON sch2.id = m5.schedule_id and m5.student_id = st.id
+      JOIN university.session ses2 ON ses2.id = sch2.session_id
+    WHERE 
+      ses2.year_of_session = 2017
+      and
+      m5.mark = 4
+  )
+;
+
+-- # 5 -- RECHECK
+SELECT st.first_name, st.last_name, f.name FROM university.student st
+JOIN university.group g ON st.group_id = g.id
+JOIN university.set s ON s.id = g.set_id
+JOIN university.speciality sp ON sp.id = s.speciality_id
+JOIN university.department d ON d.id = sp.department_id
+JOIN university.faculty f ON f.id = d.faculty_id
+WHERE 
+ st.id = 
+( 
+  SELECT st.id FROM university.schedule c
+  LEFT JOIN university.student_mark m ON c.id = m.schedule_id
+  JOIN university.set s ON s.id = c.set_id
+  JOIN university.group g ON g.set_id = s.id
+  JOIN university.student st2 ON st2.group_id = g.id
+  WHERE 
+  ( 
+    (m.mark < 4 and m.student_id = st2.id) 
+    OR 
+    NOT EXISTS (select 1 from university.student_mark m2 where m2.student_id = st2.id and m2.schedule_id = c.id)
+  )
+  GROUP BY st.id
+  HAVING count(st2) > 2
+) and f.name = 'Энергетический факультет'
+;
+
+-- # 6 - FINISHED
+SELECT 'Без стипендии', 
+  case when exists (select 1 from university.student st2 where st2.is_get_scholarship = 0) then 
+  (select count(st2.id) from university.student st2 where st2.is_get_scholarship = 0 group by st2.id) else 0 end
+UNION
+SELECT 'Стипендия без надбавки', 
+  case when exists (select 1 from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 0) then 
+  (select count(st2.id) from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 0 group by st2.id) else 0 end
+UNION
+SELECT 'Стипендия с 50% надбавкой', 
+  case when exists (select 1 from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 50) then 
+  (select count(st2.id) from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 50 group by st2.id) else 0 end
+UNION
+SELECT 'Стипендия с 100% надбавкой', 
+  case when exists (select 1 from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 100) then 
+  (select count(st2.id) from university.student st2 where st2.is_get_scholarship = 1 and st2.premium = 100 group by st2.id) else 0 end
+;
+
+-- # 7 - FINISHED
+SELECT sub.name FROM university.subject sub 
+WHERE
+sub.id in  
+(
+  -- Find subject_id which has this max_number unsatisfactory marks
+  SELECT c.subject_id FROM university.schedule c
+  JOIN university.student_mark m ON m.schedule_id = c.id
+  WHERE m.mark < 4
+  GROUP BY c.subject_id
+  HAVING count(*) = 
+  (
+  -- Find max_number unsatisfactory marks
+    SELECT count(*) as max_number FROM university.schedule c
+    JOIN university.student_mark m ON m.schedule_id = c.id
+    WHERE m.mark < 4
+    GROUP BY c.subject_id
+    ORDER BY max_number DESC
+    LIMIT 1
+  )
+)
+;
+
+-- # 8 -- FINISHED
+select sub.name from university.subject sub
+JOIN university.schedule sch2 ON sch2.subject_id = sub.id
+JOIN 
+-- FIND max AVG and schedule.id
+(select schedule_and_count.id, 
+  -- find AVG
+  case when exists (select 1 from university.student_mark mm where mm.schedule_id = schedule_and_count.id) then (select SUM(m2.mark) from university.student_mark m2 WHERE m2.schedule_id = schedule_and_count.id GROUP BY m2.schedule_id) / schedule_and_count.count else 0 end as average 
+from (
+       -- FIND schedule.id and count of students whom should pass this exam
+       select sch.id, count(*) from university.schedule sch
+         JOIN university.set s ON s.id = sch.set_id
+         JOIN university.group g ON g.set_id = s.id
+         JOIN university.student st ON st.group_id = g.id
+       GROUP BY sch.id
+     ) as schedule_and_count
+ORDER BY average DESC
+LIMIT 1
+) as result ON result.id = sch2.id
+;
+
+
+-----------
+SELECT st.* from university.student st 
+            WHERE
+              st.is_get_scholarship = 1
+              and 
+              9 <= any (
+                SELECT m.mark FROM university.student_mark m
+                  JOIN university.schedule sch ON sch.id = m.schedule_id
+                  JOIN university.set s ON s.id = sch.set_id
+                  JOIN university.session ses ON ses.id = sch.session_id and ses.year_of_session = 2017
+                  JOIN university.group g ON s.id = g.set_id and g.id = st.group_id                                   
+              ); 
+              
+SELECT m.mark FROM university.student_mark m
+                                JOIN university.schedule sch ON sch.id = m.schedule_id and m.student_id=2
+                                JOIN university.set s ON s.id = sch.set_id
+                                JOIN university.session ses ON ses.id = sch.session_id and ses.year_of_session = 2017
+                                JOIN university.group g ON s.id = g.set_id and g.id = 1 ]]></string>
+		</script>
+		<script name="speciality" id="Editor_12fbbd6" language="SQL" confirmed="y" >
+			<string><![CDATA[INSERT INTO kursach.speciality
+	( id, name, department_id) VALUES ( 1, 'Проектирование и эксплуатация электроэнергетических систем', 1 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 2, 'Тепловые электрические станции', 2 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 3, 'Электроснабжение промышленных предприятий', 3 );    
+    
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 4, 'Отечественная история', 4 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 5, 'Практическая психология. Иностранный язык', 5 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 6, 'Физическая культура', 6 ); 
+        
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 7, 'Вычислительные машины, системы и сети', 7 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 8, 'Геодезия', 8 );
+INSERT INTO kursach.speciality
+    ( id, name, department_id) VALUES ( 9, 'Программное обеспечение информационных технологий', 9 ); ]]></string>
+		</script>
+		<script name="speciality_year" id="Editor_4a3dc55" language="SQL" confirmed="y" >
+			<string><![CDATA[INSERT INTO kursach.speciality_year
+	( speciality_id, year_of_establishment_id) VALUES ( 1, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 2, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 3, 1 );
+    
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 4, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 5, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 6, 1 );
+        
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 7, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 8, 1 );
+INSERT INTO kursach.speciality_year
+    ( speciality_id, year_of_establishment_id) VALUES ( 9, 1 );	
+	]]></string>
+		</script>
+		<script name="year_of_establishment" id="Editor_1bb1e95" language="SQL" confirmed="y" >
+			<string><![CDATA[INSERT INTO kursach.year_of_establishment
+	( id, year_of_establishment) VALUES ( 1, 2017 );]]></string>
+		</script>
+		<browser id="Browse_5b7719f" name="session" confirm_updates="y" confirmed="y" >
+			<browse_table schema="university" entity="session" x="20" y="20" width="478" height="368" />
+		</browser>
+		<browser id="Browse_2ccf727" name="student" confirm_updates="y" >
+			<browse_table schema="university" entity="student" x="20" y="20" width="1100" height="356" />
+		</browser>
+		<browser id="Browse_1a749a6" name="student_mark" confirm_updates="y" confirmed="y" >
+			<browse_table schema="university" entity="student_mark" x="20" y="20" width="692" height="533" />
+		</browser>
+	</layout>
+	<layout name="Sample Layout with Tools" id="Layout_3039b4c" show_column_type="y" show_relation="columns" >
+		<callout x="45" y="45" pointer="NO" >
+			<comment><![CDATA[Double-click any table, column or foreign key to edit, right-click to start one of the tools below.
+Use the Relational Data Browse for simultaneously exploring data from multiple tables.
+All tools will be saved to project file and can be reopen.]]></comment>
+		</callout>
+		<script name="Sample SQL Editor" id="Editor_1352489" language="SQL" >
+			<string><![CDATA[SELECT * 
+FROM
+	kursach.common_groups s;]]></string>
+		</script>
+	</layout>
+</project>

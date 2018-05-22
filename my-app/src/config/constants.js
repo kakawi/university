@@ -1,0 +1,21 @@
+export const SERVER = 'http://localhost:8080/api';
+export const HOME_PATH = '/';
+export const FACULTIES_PAGE_PATH = '/faculties';
+export const DEPARTMENTS_PAGE_PATH = '/departments';
+export const GROUPS_PAGE_PATH = '/groups';
+export const SETS_PAGE_PATH = '/sets';
+export const SPECIALITIES_PAGE_PATH = '/specialities';
+export const STUDENTS_PAGE_PATH = '/students';
+export const SUBJECTS_PAGE_PATH = '/subjects';
+export const SESSIONS_PAGE_PATH = '/sessions';
+export const MARKS_PAGE_PATH = '/marks';
+export const REPORTS_PAGE_PATH = '/reports';
+
+export const API_FACULTIES_PATH = `${SERVER}/faculties`;
+export const API_DEPARTMENTS_PATH = `${SERVER}/departments`;
+export const API_SESSIONS_PATH = `${SERVER}/sessions`;
+export const API_STUDENTS_PATH = `${SERVER}/students`;
+export const API_SUBJECTS_PATH = `${SERVER}/subjects`;
+export const API_SETS_PATH = `${SERVER}/sets`;
+export const API_REPORTS_PATH = `${SERVER}/reports`;
+export const API_MARK_PATH = `${SERVER}/marks`;
