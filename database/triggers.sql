@@ -1,0 +1,1 @@
+CREATE TRIGGER finish_session AFTER UPDATE ON university.session FOR EACH ROW EXECUTE PROCEDURE university.process_finish_session()
