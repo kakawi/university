@@ -21,7 +21,7 @@ public class StudentMarkEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentMarkGenerator")
-    @SequenceGenerator(name = "studentMarkGenerator", sequenceName = "S_STUDENT_MARK", allocationSize = 1)
+    @SequenceGenerator(name = "studentMarkGenerator", sequenceName = "S_STUDENT_MARK", schema = "university", allocationSize = 1)
     @JsonView(StudentMarkViews.StudentMarkList.class)
     private Long id;
 

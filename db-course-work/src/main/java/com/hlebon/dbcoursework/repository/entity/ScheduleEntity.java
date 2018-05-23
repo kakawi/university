@@ -20,7 +20,7 @@ import javax.persistence.Table;
 public class ScheduleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scheduleGenerator")
-    @SequenceGenerator(name = "scheduleGenerator", sequenceName = "S_SCHEDULE", allocationSize = 1)
+    @SequenceGenerator(name = "scheduleGenerator", sequenceName = "S_SCHEDULE", schema = "university", allocationSize = 1)
     @JsonView(ScheduleViews.ScheduleWithout.class)
     private Long id;
 

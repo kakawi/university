@@ -24,7 +24,7 @@ public class SessionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sessionGenerator")
-    @SequenceGenerator(name = "sessionGenerator", sequenceName = "S_SESSION", allocationSize = 1)
+    @SequenceGenerator(name = "sessionGenerator", sequenceName = "S_SESSION", schema = "university", allocationSize = 1)
     @JsonView(SessionViews.SessionWithoutSet.class)
     private Long id;
 

@@ -20,7 +20,7 @@ public class SubjectEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subjectGenerator")
-    @SequenceGenerator(name = "subjectGenerator", sequenceName = "S_SUBJECT", allocationSize = 1)
+    @SequenceGenerator(name = "subjectGenerator", sequenceName = "S_SUBJECT", schema = "university", allocationSize = 1)
     @JsonView(SubjectViews.Subject.class)
     private Long id;
 
