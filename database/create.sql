@@ -84,7 +84,8 @@ CREATE TABLE university.student_mark (
     student_id           bigint  NOT NULL,
     schedule_id          bigint  NOT NULL,
     mark                 integer  NOT NULL,
-    CONSTRAINT pk_student_mark_id PRIMARY KEY ( id )
+    CONSTRAINT pk_student_mark_id PRIMARY KEY ( id ),
+    UNIQUE (student_id, schedule_id)
  );
 
 CREATE INDEX idx_student_mark_schedule_id ON university.student_mark ( schedule_id );
