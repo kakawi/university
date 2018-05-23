@@ -13,12 +13,13 @@ export default class StudentForm extends React.Component {
       addressOfResidence: '',
       isGetScholarship: '',
       isLocal: '',
-      groupId: ''
+      groupId: '',
+      group: {}
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSelectChangeGroup = this.handleSelectChangeGroup.bind(this);
   }
   handleInputChange(event) {
     const target = event.target;
@@ -26,9 +27,12 @@ export default class StudentForm extends React.Component {
       [target.name]: target.value
     });
   }
-  handleSelectChange(event, data) {
+  handleSelectChangeGroup(event, data) {
+    const groupId = data.value;
+    const chosenGroup = this.props.groups.filter(group => group.id === groupId)[0];
     this.setState({
-      [data.name]: data.value
+      groupId: groupId,
+      group: chosenGroup
     });
   }
   handleSubmit(event) {
@@ -121,7 +125,7 @@ export default class StudentForm extends React.Component {
                 options={groupsOptions}
                 placeholder='Номер группы'
                 defaultValue={this.state.groupId}
-                onChange={this.handleSelectChange}
+                onChange={this.handleSelectChangeGroup}
                 name={"groupId"}
               />
             </Form.Field>

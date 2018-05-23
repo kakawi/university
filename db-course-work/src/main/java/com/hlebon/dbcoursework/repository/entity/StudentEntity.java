@@ -14,8 +14,8 @@ import javax.persistence.*;
 public class StudentEntity {
 
     @Id
-    @GeneratedValue
-    @SequenceGenerator(name = "studentGenerator", sequenceName = "S_STUDENT", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "studentGenerator")
+    @SequenceGenerator(name = "studentGenerator", sequenceName = "S_STUDENT", schema = "university", allocationSize = 1)
     @JsonView(StudentViews.StudentWithoutGroup.class)
     private Long id;
 

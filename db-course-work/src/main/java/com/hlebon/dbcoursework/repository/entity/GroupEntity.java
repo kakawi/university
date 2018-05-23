@@ -23,7 +23,7 @@ public class GroupEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groupGenerator")
-    @SequenceGenerator(name = "groupGenerator", schema = "university", sequenceName = "S_GROUP")
+    @SequenceGenerator(name = "groupGenerator", schema = "university", catalog = "postgres", sequenceName = "S_GROUP")
     @JsonView({GroupViews.GroupWithoutSet.class})
     private Long id;
 

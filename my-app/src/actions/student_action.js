@@ -27,10 +27,14 @@ export const getStudent = (id) => dispatch => {
 export const onSave = (newStudent) => dispatch => {
   dispatch({type: types.CREATE_STUDENT_REQUEST});
   axios.post(constants.API_STUDENTS_PATH + "/create", {
-      groupNumber: newStudent.groupNumber,
-      set: {
-        id: newStudent.setId
-      }
+      lastName: newStudent.lastName,
+      firstName: newStudent.firstName,
+      middleName: newStudent.middleName,
+      recordBook: newStudent.recordBook,
+      addressOfPermanentResidence: newStudent.addressOfPermanentResidence,
+      addressOfResidence: newStudent.addressOfResidence,
+      isLocal: newStudent.isLocal,
+      group: newStudent.group,
     })
     .then((response) => {
       dispatch({type: types.CREATE_STUDENT_SUCCESS, payload: response.data});
