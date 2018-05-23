@@ -5,9 +5,9 @@ AS $function$
     BEGIN        
         IF NEW.is_finished = TRUE THEN
             -- Clear
-            UPDATE university.student SET is_get_scholarship = 0, premium = 0;
+            UPDATE university.student SET is_get_scholarship = false, premium = 0;
             -- is get scholarship FOR local
-            UPDATE university.student st SET is_get_scholarship = 1
+            UPDATE university.student st SET is_get_scholarship = true
             WHERE 
               st.is_local = TRUE
               and                
@@ -29,7 +29,7 @@ AS $function$
                   m4.mark > 3
               );
             -- is get scholarship FOR foreign
-            UPDATE university.student st SET is_get_scholarship = 1
+            UPDATE university.student st SET is_get_scholarship = true
               WHERE 
                 st.is_local = FALSE
                 and                
@@ -64,7 +64,7 @@ AS $function$
             -- add 50% Premium for whom get scholarhsip
             UPDATE university.student st SET premium = 50
             WHERE
-              st.is_get_scholarship = 1
+              st.is_get_scholarship = true
               and
               -- Min mark is 6               
               6 <= all (
@@ -96,7 +96,7 @@ AS $function$
             -- add 100% Premium for whom get scholarhsip
             UPDATE university.student st SET premium = 100
             WHERE
-              st.is_get_scholarship = 1
+              st.is_get_scholarship = true
               and 
               9 <= all (
                 SELECT m.mark FROM university.student_mark m
