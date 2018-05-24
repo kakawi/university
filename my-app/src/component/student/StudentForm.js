@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Select, Loader } from 'semantic-ui-react'
+import { Form, Button, Select, Loader, Checkbox } from 'semantic-ui-react'
 
 export default class StudentForm extends React.Component {
   constructor(props) {
@@ -12,7 +12,7 @@ export default class StudentForm extends React.Component {
       addressOfPermanentResidence: '',
       addressOfResidence: '',
       isGetScholarship: '',
-      isLocal: '',
+      isLocal: false,
       groupId: '',
       group: {}
     };
@@ -27,6 +27,11 @@ export default class StudentForm extends React.Component {
       [target.name]: target.value
     });
   }
+  handleCheckBoxChange = (event, data) => {
+    this.setState({
+      [data.name]: data.checked
+    });
+  };
   handleSelectChangeGroup(event, data) {
     const groupId = data.value;
     const chosenGroup = this.props.groups.filter(group => group.id === groupId)[0];
@@ -112,11 +117,10 @@ export default class StudentForm extends React.Component {
               />
             </Form.Field>
             <Form.Field>
-              <label>Местный</label>
-              <input
-                placeholder='Местный'
-                value={this.state.isLocal}
-                onChange={this.handleInputChange}
+              <Checkbox
+                label='Местный'
+                checked={this.state.isLocal}
+                onChange={this.handleCheckBoxChange}
                 name={"isLocal"}
               />
             </Form.Field>
