@@ -76,7 +76,7 @@ export default class ScheduleSet extends React.Component {
                   {isSubjectsFetched ?
                     <Form>
                       <Form.Field>
-                        <label>Год набора</label>
+                        <label>Предмет</label>
                         <Select
                           options={subjectsOptions}
                           placeholder='Предмет'
