@@ -38,7 +38,7 @@ export const onSave = (newStudent) => dispatch => {
     })
     .then((response) => {
       dispatch({type: types.CREATE_STUDENT_SUCCESS, payload: response.data});
-      dispatch(push(constants.GROUPS_PAGE_PATH))
+      dispatch(push(constants.STUDENTS_PAGE_PATH))
     })
     .catch((error) => {
       console.log("WARN", error);
