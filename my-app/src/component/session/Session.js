@@ -2,12 +2,14 @@ import React from 'react'
 import { Loader, Button, Header } from 'semantic-ui-react'
 import ScheduleSetList from './schedule/ScheduleSetList';
 import ScheduleSet from './schedule/ScheduleSet';
+import ScheduleAddNew from "./schedule/ScheduleAddNew";
 
 export default class Session extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      session: {}
+      session: {},
+      openForm: false
     };
 
     this.onShowSet = this.onShowSet.bind(this);
@@ -31,6 +33,13 @@ export default class Session extends React.Component {
   onSave() {
 
   }
+  onNewClick = (e) => this.setState({
+    openForm: true
+  });
+  onClose = () => this.setState({
+    openForm: false
+  });
+
   renderFinishButton() {
     return (
       <Button
@@ -67,11 +76,22 @@ export default class Session extends React.Component {
       isSetsFetched,
       setsForSession,
     } = this.props.currentSession;
+    const {openForm} = this.state;
     return(
       <div>
         {
           isSessionFetched ?
             <div>
+              <Button
+                onClick={this.onNewClick}
+                content="Добавить"
+              />
+              {openForm &&
+              <ScheduleAddNew
+                onClose={this.onClose}
+                addNewSubject={this.props.addSubjectInSession}
+              />
+              }
               <Header as={"h2"}>{session.name} - {session.yearOfSession}</Header>
               {session.isFinished ? this.renderCancelButton() : this.renderFinishButton()}
               {isSetsFetched ?
