@@ -29,6 +29,12 @@ export default class StudentList extends React.Component {
                 Номер группы
               </Table.HeaderCell>
               <Table.HeaderCell>
+                Местный
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                Стипендия
+              </Table.HeaderCell>
+              <Table.HeaderCell>
                 Действия
               </Table.HeaderCell>
             </Table.Row>
