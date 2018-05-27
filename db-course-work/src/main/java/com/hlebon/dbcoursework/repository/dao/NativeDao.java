@@ -61,6 +61,27 @@ public class NativeDao {
         return result;
     }
 
+    public Collection<DontPassStudent> dontPassExamProcedure(long idSession, long idDepartment) {
+        List<Object[]> resultList = entityManager.createNativeQuery("select * from university.dontpassexam(:idSession, :idDepartment)")
+                .setParameter("idSession", idSession)
+                .setParameter("idDepartment", idDepartment)
+                .getResultList();
+
+        ArrayList<DontPassStudent> result = new ArrayList<>();
+        resultList.forEach(objects -> {
+            DontPassStudent dontPassStudent = new DontPassStudent();
+            dontPassStudent.setLastName((String) objects[0]);
+            dontPassStudent.setFirstName((String) objects[1]);
+            dontPassStudent.setMiddleName((String) objects[2]);
+            dontPassStudent.setSubjectName((String) objects[3]);
+            dontPassStudent.setGroupNumber((String) objects[4]);
+
+            result.add(dontPassStudent);
+        });
+
+        return result;
+    }
+
     public Collection<GroupAverageMark> groupAverageMarks(long idSession, long idFaculty) {
         List<Object[]> resultList = entityManager.createNativeQuery(
                 "SELECT g.group_number, AVG(m.mark) FROM university.student st" +

@@ -1,8 +1,8 @@
 CREATE OR REPLACE FUNCTION university.dontpassexam(idsession bigint, iddepartment bigint)
- RETURNS TABLE(last_name character varying, first_name character varying, middle_name character varying, name character varying)
+ RETURNS TABLE(last_name character varying, first_name character varying, middle_name character varying, name character varying, group_number character varying)
  LANGUAGE sql
-AS $function$ 
-    SELECT student.last_name, student.first_name, student.middle_name, subject.name FROM university.student
+AS $function$
+    SELECT student.last_name, student.first_name, student.middle_name, subject.name, g.group_number FROM university.student
       JOIN university.group g ON g.id = student.group_id
       JOIN university.set ON set.id = g.set_id
       JOIN university.schedule ON schedule.set_id = set.id

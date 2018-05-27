@@ -28,7 +28,7 @@ public class ReportController {
             @RequestParam("idSession") long idSession,
             @RequestParam("idDepartment") long idDepartment
     ) {
-        return nativeDao.dontPassExam(idSession, idDepartment);
+        return nativeDao.dontPassExamProcedure(idSession, idDepartment);
     }
 
     @GetMapping(path = "/reports/groupAverageMarks", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
